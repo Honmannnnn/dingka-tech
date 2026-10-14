@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@theme {
+  /* ===== 顶卡科技品牌色系 (暗色潮玩风格) ===== */
+  --color-brand-gold: #f6ae54;
+  --color-brand-gold-light: #ffd080;
+  --color-brand-gold-dark: #d4881a;
+  --color-brand-blue: #4fc3f7;
+  --color-brand-purple: #b39ddb;
+  --color-brand-pink: #f48fb1;
+
+  /* ===== 暗色背景色系 ===== */
+  --color-dark-950: #080b12;
+  --color-dark-900: #0d1117;
+  --color-dark-800: #161b27;
+  --color-dark-700: #1e2636;
+  --color-dark-600: #283040;
+  --color-dark-500: #374151;
+
+  /* ===== 文字色 ===== */
+  --color-text-primary: #f0f4ff;
+  --color-text-secondary: #a0aec0;
+  --color-text-muted: #6b7280;
+
+  /* ===== 字体 ===== */
+  --font-sans: 'Noto Sans SC', 'Noto Sans', system-ui, sans-serif;
+  --font-display: 'Noto Sans SC', system-ui, sans-serif;
+
+  /* ===== 动效 ===== */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== 全局基础样式 ===== */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-dark-950);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font: inherit;
+  }
+}
+
+/* ===== 自定义工具类 ===== */
+@layer utilities {
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #f6ae54, #ffd080, #f6ae54);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(135deg, #4fc3f7, #b39ddb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-card-glow {
+    background: radial-gradient(ellipse at center, rgba(246, 174, 84, 0.08) 0%, transparent 70%);
+  }
+
+  .border-glow-gold {
+    border: 1px solid rgba(246, 174, 84, 0.3);
+    box-shadow: 0 0 20px rgba(246, 174, 84, 0.1), inset 0 0 20px rgba(246, 174, 84, 0.05);
+  }
+
+  .border-glow-blue {
+    border: 1px solid rgba(79, 195, 247, 0.3);
+    box-shadow: 0 0 20px rgba(79, 195, 247, 0.1);
+  }
+
+  .glass-dark {
+    background: rgba(13, 17, 23, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ===== 动画关键帧 ===== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(246, 174, 84, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(246, 174, 84, 0.5), 0 0 80px rgba(246, 174, 84, 0.2); }
+}
+
+@keyframes card-shine {
+  0% { transform: translateX(-100%) rotate(25deg); }
+  100% { transform: translateX(300%) rotate(25deg); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ===== 卡牌闪光效果 ===== */
+.card-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 60%
+  );
+  animation: card-shine 3s ease-in-out infinite;
+}
