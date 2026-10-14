@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
@@ -25,14 +25,32 @@ const types = [
 ]
 
 export default function ShopPage() {
+  const [products, setProducts] = useState<CardProduct[]>(PRODUCTS)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedRarity, setSelectedRarity] = useState('全部')
   const [selectedType, setSelectedType] = useState('all')
   const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc' | 'newest'>('default')
 
+  // 动态同步后台管理端商品状态（上下架、库存动态变更）
+  useEffect(() => {
+    let isMounted = true
+    fetch('/api/products')
+      .then((res) => res.json())
+      .then((resData) => {
+        if (isMounted && resData.success && Array.isArray(resData.data)) {
+          setProducts(resData.data)
+        }
+      })
+      .catch((err) => console.error('同步实时卡牌数据失败:', err))
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((p) => {
+    return products.filter((p) => {
       const matchSearch =
         p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.seriesName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -49,7 +67,7 @@ export default function ShopPage() {
       if (sortBy === 'newest') return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()
       return (b.hot ? 1 : 0) - (a.hot ? 1 : 0)
     })
-  }, [searchTerm, selectedCategory, selectedRarity, selectedType, sortBy])
+  }, [products, searchTerm, selectedCategory, selectedRarity, selectedType, sortBy])
 
   return (
     <main className="min-h-screen bg-[#080b12] text-[#f0f4ff]">
@@ -246,7 +264,15 @@ export default function ShopPage() {
                           <span className="text-xs text-[#6b7280] line-through ml-2">¥{card.originalPrice}</span>
                         )}
                       </div>
-                      <span className="text-[11px] text-[#6b7280]">仅剩 {card.stock} 件</span>
+                      {card.stock > 0 ? (
+                        card.stock <= 3 ? (
+                          <span className="text-[11px] text-[#f6ae54] font-medium animate-pulse">仅剩 {card.stock} 件</span>
+                        ) : (
+                          <span className="text-[11px] text-[#6b7280]">库存 {card.stock} 件</span>
+                        )
+                      ) : (
+                        <span className="text-[11px] text-red-400 font-semibold bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">已售罄</span>
+                      )}
                     </div>
                   </div>
                 </Link>

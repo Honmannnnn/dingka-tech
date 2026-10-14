@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { PRODUCTS } from '@/data/products'
+import { PRODUCTS, CardProduct } from '@/data/products'
 import { 
   ShieldCheck, 
   Truck, 
@@ -24,10 +24,35 @@ export default function ProductDetailPage() {
   const router = useRouter()
   const productId = params?.id as string
 
-  const product = PRODUCTS.find((p) => p.id === productId)
+  const [product, setProduct] = useState<CardProduct | undefined>(() => 
+    PRODUCTS.find((p) => p.id === productId)
+  )
+  const [isLoading, setIsLoading] = useState(!product)
   const [quantity, setQuantity] = useState(1)
   const [isLiked, setIsLiked] = useState(false)
   const [addedToast, setAddedToast] = useState(false)
+
+  // 动态同步后台管理端商品状态
+  useEffect(() => {
+    if (!productId) return
+    let isMounted = true
+
+    fetch(`/api/products/${productId}`)
+      .then((res) => res.json())
+      .then((resData) => {
+        if (isMounted && resData.success && resData.data) {
+          setProduct(resData.data)
+        }
+      })
+      .catch((err) => console.error('同步卡牌详情失败:', err))
+      .finally(() => {
+        if (isMounted) setIsLoading(false)
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [productId])
 
   if (!product) {
     return (
@@ -233,35 +258,43 @@ export default function ProductDetailPage() {
                   <span className="text-xs text-[#a0aec0]">数量选择:</span>
                   <div className="flex items-center border border-white/10 rounded-xl bg-[#161b27]">
                     <button
+                      disabled={product.stock <= 0}
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-3.5 py-1.5 text-sm hover:text-[#f6ae54] transition-colors"
+                      className="px-3.5 py-1.5 text-sm hover:text-[#f6ae54] transition-colors disabled:opacity-40"
                     >
                       -
                     </button>
-                    <span className="px-4 py-1.5 text-sm font-bold">{quantity}</span>
+                    <span className="px-4 py-1.5 text-sm font-bold">{product.stock > 0 ? quantity : 0}</span>
                     <button
+                      disabled={product.stock <= 0}
                       onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                      className="px-3.5 py-1.5 text-sm hover:text-[#f6ae54] transition-colors"
+                      className="px-3.5 py-1.5 text-sm hover:text-[#f6ae54] transition-colors disabled:opacity-40"
                     >
                       +
                     </button>
                   </div>
-                  <span className="text-xs text-[#6b7280]">库存剩余 {product.stock} 件</span>
+                  {product.stock > 0 ? (
+                    <span className="text-xs text-[#6b7280]">库存剩余 {product.stock} 件</span>
+                  ) : (
+                    <span className="text-xs text-red-400 font-semibold bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">暂时缺货 / 已售罄</span>
+                  )}
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                   <button
+                    disabled={product.stock <= 0}
                     onClick={handleAddToCart}
-                    className="w-full sm:flex-1 py-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-[#f0f4ff] font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200"
+                    className="w-full sm:flex-1 py-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-[#f0f4ff] font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <ShoppingBag size={18} />
                     加入购物车
                   </button>
                   <button
+                    disabled={product.stock <= 0}
                     onClick={() => alert(`准备跳转订单结算页，购买 ${quantity} 件 ${product.name}`)}
-                    className="w-full sm:flex-1 py-4 rounded-xl bg-gradient-to-r from-[#f6ae54] to-[#d4881a] text-[#080b12] font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-[#f6ae54]/20 hover:scale-[1.02] transition-all duration-200"
+                    className="w-full sm:flex-1 py-4 rounded-xl bg-gradient-to-r from-[#f6ae54] to-[#d4881a] text-[#080b12] font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-[#f6ae54]/20 hover:scale-[1.02] transition-all duration-200 disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed"
                   >
-                    立即购买
+                    {product.stock > 0 ? '立即购买' : '暂时售罄'}
                   </button>
                 </div>
               </div>

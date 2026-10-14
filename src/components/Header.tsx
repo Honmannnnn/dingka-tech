@@ -10,6 +10,7 @@ const navItems = [
   { label: '最新资讯', href: '/news' },
   { label: '卡牌图鉴', href: '/catalog' },
   { label: '关于我们', href: '/about' },
+  { label: '管理后台', href: '/admin', badge: '中台' },
 ]
 
 export default function Header() {
@@ -59,9 +60,14 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="relative px-4 py-2 text-sm font-medium text-[#a0aec0] hover:text-[#f0f4ff] transition-colors duration-200 group"
+                  className="relative px-3.5 py-2 text-sm font-medium text-[#a0aec0] hover:text-[#f0f4ff] transition-colors duration-200 group flex items-center gap-1.5"
                 >
-                  {item.label}
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#f6ae54]/20 text-[#f6ae54] border border-[#f6ae54]/30 leading-none">
+                      {item.badge}
+                    </span>
+                  )}
                   <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-0 bg-gradient-to-r from-[#f6ae54] to-[#ffd080] rounded-full group-hover:w-4/5 transition-all duration-300" />
                 </Link>
               ))}
@@ -122,9 +128,14 @@ export default function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#a0aec0] hover:text-[#f0f4ff] hover:bg-white/5 transition-all duration-200"
+                className="flex items-center justify-between px-4 py-3 rounded-xl text-[#a0aec0] hover:text-[#f0f4ff] hover:bg-white/5 transition-all duration-200"
               >
-                {item.label}
+                <span>{item.label}</span>
+                {item.badge && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#f6ae54]/20 text-[#f6ae54] border border-[#f6ae54]/30">
+                    {item.badge}
+                  </span>
+                )}
               </Link>
             ))}
             <div className="pt-4">
