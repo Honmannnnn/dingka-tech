@@ -1,70 +1,89 @@
-# 顶卡科技官网
+# 顶卡科技 · 全栈技术工程与网络架构项目
 
-专注集换式卡牌 · 一站式服务平台
+> **面试作品专案**：独立完成公司官网搭建、网络架构部署与优化，保障系统稳定运行；负责品牌配套 App / 微信小程序的开发、搭建、迭代升级及日常运营维护。
 
-## 技术栈
+---
 
-| 技术 | 版本 | 说明 |
-|------|------|------|
-| Next.js | 15 | App Router + Turbopack |
-| React | 19 | RSC (React Server Components) |
-| TypeScript | 5.7 | 全量类型安全 |
-| Tailwind CSS | v4 | CSS-first 配置，无 JS 配置文件 |
-| next/font | 内置 | 本地托管 Noto Sans SC |
-| framer-motion | 12 | 动画库（按需使用） |
-| lucide-react | 0.525 | 图标库 |
-
-## 项目结构
+## 🌟 项目架构全景图
 
 ```
-src/
-├── app/
-│   ├── layout.tsx        # 根布局（字体、SEO metadata）
-│   ├── page.tsx          # 首页
-│   ├── globals.css       # Tailwind v4 主题 + 全局样式
-│   └── not-found.tsx     # 404 页面
-└── components/
-    ├── Header.tsx         # 顶部导航（响应式、sticky glassmorphism）
-    ├── Footer.tsx         # 底部（链接、社交、订阅）
-    ├── HeroSection.tsx    # 英雄区（动画背景、浮动卡牌）
-    ├── FeaturedCards.tsx  # 精选卡牌展示
-    ├── ServicesSection.tsx # 服务特性
-    ├── NewsSection.tsx    # 最新资讯
-    └── CTASection.tsx     # 行动召唤区
+宝可梦卡牌 (顶卡科技专案)
+├── src/                          # 【模块一】官方全栈官网 (Next.js 15 + RSC + Tailwind v4)
+│   ├── app/
+│   │   ├── layout.tsx            # 根布局、本地字体托管 (next/font)、SEO 元数据
+│   │   ├── page.tsx              # 官网暗色潮玩首页 (Hero、精选卡牌、服务矩阵、最新资讯)
+│   │   ├── shop/                 # 卡牌商城列表 (多维属性/系列/稀有度实时筛选、排序)
+│   │   │   └── [id]/             # 卡牌详情页 (全息3D卡面鉴赏、招式参数、微信/支付购买面板)
+│   │   ├── catalog/              # 官方卡牌图鉴与全息数据库 (系列代码、稀有度弹窗浏览)
+│   │   ├── about/                # 关于顶卡科技 (企业愿景、技术护城河、全国代理网络)
+│   │   ├── news/                 # 最新快讯与科普 (头条轮播、分类归档)
+│   │   └── not-found.tsx         # 宝可梦主题 404 定制缺省页
+│   ├── components/               # 高复用前端组件库 (Header、Footer、Hero、Cards 等)
+│   └── data/                     # 统一商品与图鉴数据层 (TypeScript 类型驱动)
+│
+├── miniprogram/                  # 【模块二】品牌配套微信小程序工程 (Taro 4 + React + Zustand)
+│   ├── src/
+│   │   ├── app.config.ts         # 小程序路由、暗色沉浸式窗口与 TabBar 配置
+│   │   ├── store/user.ts         # 用户授权登录、微信 OpenID、Token 与购物车全局状态
+│   │   └── pages/
+│   │       ├── index/            # 移动端首页 (顶部品牌栏、轮播运营位、金刚区、卡牌流)
+│   │       └── user/             # 用户中心 (微信一键快捷登录、订单四态、购物车结算看板)
+│   └── package.json              # 小程序跨端工程脚手架配置
+│
+└── docs/                         # 【模块三】网络架构部署与运维优化规范
+    ├── ARCHITECTURE.md           # 生产级网络拓扑图、CDN 动静分离、大促削峰、多级缓存方案
+    └── DEPLOYMENT_AND_OPS.md     # Docker 多阶段构建、Nginx 反代 SSL 加固与日常运维排障 SOP
 ```
 
-## 运行步骤
+---
 
-### 1. 安装 Node.js
+## 🚀 核心技术栈亮点 (2026 主流最佳实践)
 
-前往 https://nodejs.org 下载 **LTS 版本（v22 或 v24）** 安装
+| 领域 | 选用技术 | 技术优势与选择理由 |
+|------|---------|------------------|
+| **官网元框架** | **Next.js 15 (App Router)** | 原生支持 React 19 服务端组件（RSC）与流式渲染，SEO 表现极致 |
+| **构建工具** | **Turbopack** | 毫秒级 HMR 热更新，冷启动与生产构建速度相较 Webpack 提升 4 倍以上 |
+| **样式与动效** | **Tailwind CSS v4** | CSS-first 主题配置，零额外运行期运行时损耗；配合暗色潮玩奢华设计语言 |
+| **字体与性能** | **next/font** | 零外链本地子集化托管，消除传统 CDN 字体阻塞，首屏速度大幅跃升 |
+| **移动端小程序** | **Taro 4 + Zustand** | 统一 React 研发心智，单套代码可同时编译至微信小程序及双端原生 App |
+| **网络与运维** | **Nginx + Anycast CDN** | 动静分离、Brotli 极致压缩、Redis 分布式原子锁防超卖、Sentry 链路追踪 |
 
-### 2. 安装依赖
+---
+
+## 📜 阶段性 Git Commit 规范记录
+
+本工程严格按照 **Angular Conventional Commits** 规范，每实现一个完整功能原子化提交一次：
 
 ```bash
+* 09066e0 (HEAD -> main) docs: 编写生产级网络架构方案、Docker容器编排、Nginx安全加固与日常运维巡检SOP手册
+* 9e74013 feat: 实现顶卡科技微信小程序客户端模块，涵盖微信授权登录、卡牌选购流与状态管理
+* 5b62978 chore: 优化 .gitignore 忽略 IDE 缓存文件，规范提交规范
+* 7539530 feat: 实现最新资讯与深度科普页面，支持分类筛选与头条卡片展示
+* e74d50f feat: 实现关于顶卡科技品牌介绍页，涵盖公司战略、技术护城河与发展里程碑
+* 7059186 feat: 实现卡牌图鉴与全息数据库页面，支持系列检索、属性筛选与弹窗卡牌立绘鉴赏
+* 52f8137 feat: 实现卡牌详情页，支持全息卡面展示、技能参数解析与加购结算面板
+* 4d1bd7f feat: 实现卡牌商城列表页，支持多维筛选、搜索与响应式卡牌网格
+* 862426a feat: 初始化顶卡科技官网核心架构与暗色潮玩首页组件
+```
+
+---
+
+## 💻 快速本地运行与体验
+
+### 1. 运行顶卡科技官网
+```bash
+# 1. 安装依赖
 npm install
-```
 
-### 3. 启动开发服务器
-
-```bash
+# 2. 启动 Next.js 15 Turbopack 开发环境
 npm run dev
+# 浏览器访问：http://localhost:3000
 ```
 
-打开浏览器访问 http://localhost:3000
-
-### 4. 生产构建
-
+### 2. 运行微信小程序模块
 ```bash
-npm run build
-npm start
+cd miniprogram
+npm install
+npm run dev:weapp
+# 打开「微信开发者工具」，导入 miniprogram 目录即可进行实时预览与调试
 ```
-
-## 设计特点
-
-- 🌑 **暗色潮玩风格** - 深邃暗色背景 + 金色品牌色调
-- ✨ **玻璃拟态效果** - Glassmorphism Header
-- 🎴 **卡牌悬浮动效** - 浮动装饰卡牌 + 闪光效果
-- 📱 **响应式设计** - 完美适配移动端和桌面端
-- 🚀 **现代技术栈** - Next.js 15 + RSC + Tailwind v4
-- 🔤 **本地字体托管** - 使用 next/font 避免 Google Fonts 外链
